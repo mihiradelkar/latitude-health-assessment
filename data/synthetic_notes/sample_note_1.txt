@@ -1,0 +1,47 @@
+PATIENT: John Doe
+DATE: 2025-01-15
+ENCOUNTER: Follow-up Visit
+
+CHIEF COMPLAINT:
+Patient presents with worsening lower back pain radiating to left leg.
+
+HISTORY OF PRESENT ILLNESS:
+58-year-old male with chronic lower back pain for past 18 months, now with new onset of radiating pain down left leg for past 6 weeks. Pain is sharp, rated 8/10, worse with sitting and standing. Conservative treatment including physical therapy for 3 months and NSAIDs have provided minimal relief. Patient reports numbness in left foot. No bowel or bladder dysfunction. Pain interferes with daily activities and work.
+
+PAST MEDICAL HISTORY:
+- Type 2 Diabetes Mellitus (E11.9)
+- Hypertension (I10)
+- Lumbar disc degeneration (M51.36)
+
+CURRENT MEDICATIONS:
+- Metformin 1000mg PO BID
+- Lisinopril 20mg PO daily
+- Ibuprofen 600mg PO TID PRN
+
+ALLERGIES:
+- Penicillin (rash)
+- Sulfa drugs (hives)
+
+PHYSICAL EXAMINATION:
+Vitals: BP 138/88, HR 76, Temp 98.6F
+Musculoskeletal: Tenderness over L4-L5 region. Positive straight leg raise on left at 45 degrees. Decreased sensation in L5 distribution on left foot. 4/5 strength in left ankle dorsiflexion.
+
+LABS AND IMAGING:
+- HbA1c: 7.2% (reference: <7.0%)
+- MRI Lumbar Spine (01/10/2025): Moderate L4-L5 disc herniation with nerve root impingement
+
+ASSESSMENT AND PLAN:
+1. Lumbar radiculopathy secondary to L4-L5 disc herniation (M51.16)
+   - Failed conservative therapy
+   - Recommend referral to spine surgeon for surgical evaluation
+   - Consider epidural steroid injection if patient declines surgery
+   
+2. Type 2 Diabetes - suboptimal control
+   - Increase Metformin to 1500mg BID
+   - Follow up in 3 months with repeat HbA1c
+   
+3. Hypertension - stable on current regimen
+
+PROCEDURES REQUESTED:
+- Lumbar epidural steroid injection (CPT 62323)
+- Spine surgery consultation (CPT 99244)
