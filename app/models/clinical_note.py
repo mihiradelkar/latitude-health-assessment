@@ -4,19 +4,19 @@ from datetime import datetime
 
 class Medication(BaseModel):
     name: str
-    dosage: str
-    frequency: str
+    dosage: Optional[str] = None
+    frequency: Optional[str] = None
     route: Optional[str] = None
 
 class Allergy(BaseModel):
     substance: str
-    reaction: str
+    reaction: Optional[str] = None
     severity: Optional[str] = None
 
 class LabResult(BaseModel):
     test_name: str
     value: str
-    unit: str
+    unit: Optional[str] = None  # Changed: was str, now Optional[str]
     reference_range: Optional[str] = None
     date: Optional[str] = None
 

@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     # LLM Settings
     default_model: str = "claude-sonnet-4-5-20250929"
     max_tokens: int = 4000
-    temperature: float = 0.3
+    temperature: float = 0.1  # Changed from 0.3 - lower = more consistent
     
     class Config:
         env_file = ".env"
