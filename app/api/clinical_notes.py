@@ -5,6 +5,7 @@ import uuid
 
 from app.models.clinical_note import ClinicalNoteRequest, ClinicalNoteResponse
 from app.services.llm_service import llm_service
+from app.services.fhir_mapper import fhir_mapper
 
 router = APIRouter()
 
@@ -14,7 +15,7 @@ notes_storage: Dict[str, dict] = {}
 @router.post("/process", response_model=ClinicalNoteResponse)
 async def process_clinical_note(request: ClinicalNoteRequest):
     """
-    Process an unstructured clinical note and extract structured data
+    Process an unstructured clinical note and extract structured data + FHIR resources
     """
     
     start_time = time.time()
@@ -32,18 +33,23 @@ async def process_clinical_note(request: ClinicalNoteRequest):
         if request.encounter_date:
             structured_data.encounter_date = request.encounter_date
         
+        # Map to FHIR resources
+        fhir_bundle = fhir_mapper.map_to_fhir_bundle(structured_data)
+        
         # Calculate processing time
         processing_time = (time.time() - start_time) * 1000  # ms
         
         # Store in memory
         notes_storage[note_id] = {
             "structured_data": structured_data.dict(),
+            "fhir_resources": fhir_bundle,
             "processed_at": structured_data.processed_at.isoformat()
         }
         
         return ClinicalNoteResponse(
             note_id=note_id,
             structured_data=structured_data,
+            fhir_resources=fhir_bundle,
             processing_time_ms=processing_time
         )
         
@@ -53,7 +59,7 @@ async def process_clinical_note(request: ClinicalNoteRequest):
 @router.get("/{note_id}")
 async def get_clinical_note(note_id: str):
     """
-    Retrieve a processed clinical note
+    Retrieve a processed clinical note with FHIR resources
     """
     if note_id not in notes_storage:
         raise HTTPException(status_code=404, detail="Note not found")
