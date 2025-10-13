@@ -1,0 +1,47 @@
+COVERAGE GUIDELINE: Lumbar Epidural Steroid Injections
+
+POLICY NUMBER: LCD-2023-0145
+EFFECTIVE DATE: January 1, 2023
+
+COVERAGE CRITERIA:
+
+Medical Necessity Requirements:
+1. Patient must have documented radicular pain (sciatica) radiating below the knee for at least 6 weeks
+2. Diagnosis of herniated disc confirmed by MRI or CT scan within past 6 months
+3. Failed conservative treatment including:
+   - Physical therapy for minimum of 4 weeks
+   - Trial of NSAIDs or other anti-inflammatory medications
+   - Activity modification
+4. Pain level of 5/10 or greater on validated pain scale
+5. No neurological emergency (cauda equina syndrome, progressive motor weakness)
+
+COVERED ICD-10 CODES:
+- M51.16: Intervertebral disc disorders with radiculopathy, lumbar region
+- M51.17: Intervertebral disc disorders with radiculopathy, lumbosacral region
+- M51.26: Other intervertebral disc displacement, lumbar region
+- M51.27: Other intervertebral disc displacement, lumbosacral region
+- M54.16: Radiculopathy, lumbar region
+- M54.17: Radiculopathy, lumbosacral region
+
+COVERED CPT CODES:
+- 62323: Injection(s), of diagnostic or therapeutic substance(s), lumbar or sacral (caudal) epidural
+
+EXCLUSION CRITERIA:
+1. Active infection at injection site
+2. Coagulopathy or use of anticoagulants
+3. Allergy to local anesthetics or corticosteroids
+4. Previous epidural steroid injection within past 2 weeks
+5. More than 3 injections in a 6-month period
+
+REQUIRED DOCUMENTATION:
+1. Clinical notes documenting duration and nature of symptoms
+2. Results of MRI or CT scan showing disc herniation
+3. Documentation of failed conservative treatments with dates
+4. Current medication list
+5. Physical examination findings including neurological assessment
+6. Pain assessment score
+
+NON-COVERED SITUATIONS:
+- Epidural injections for non-specific low back pain without radiculopathy
+- Prophylactic injections
+- Injections performed more frequently than every 2 weeks

@@ -1,0 +1,43 @@
+PATIENT: Lisa Martinez
+MRN: PT-77889
+DATE: 2025-01-25
+ENCOUNTER: Cardiology Consultation
+
+CHIEF COMPLAINT:
+Chest pain and shortness of breath, requesting cardiac catheterization
+
+HISTORY OF PRESENT ILLNESS:
+58-year-old female with atypical chest pain for 3 months. Pain is intermittent, non-radiating, not clearly related to exertion. Some episodes of shortness of breath with minimal activity. History of anxiety. No previous cardiac workup documented. Patient states she saw another cardiologist 6 months ago but records not available.
+
+PAST MEDICAL HISTORY:
+- Hypertension (I10)
+- Hyperlipidemia (E78.5)
+- Anxiety disorder (F41.9)
+- Obesity (BMI 33)
+
+CURRENT MEDICATIONS:
+- Atorvastatin 40mg daily
+- Lisinopril 10mg daily
+- Alprazolam 0.5mg PRN
+
+ALLERGIES:
+- Aspirin (GI upset)
+
+PHYSICAL EXAMINATION:
+Vitals: BP 142/88, HR 78, RR 16, O2 Sat 98% RA
+Cardiovascular: Regular rate, no murmurs, no JVD
+Lungs: Clear bilaterally
+
+LABS AND IMAGING:
+- Lipid panel (6 months ago): Total Chol 220, LDL 145, HDL 42, TG 165
+- Basic metabolic panel: Within normal limits
+
+ASSESSMENT AND PLAN:
+1. Atypical chest pain (R07.89) - etiology unclear
+   - Patient requesting cardiac catheterization
+   - Discussed need for non-invasive testing first
+   - Ordered stress test (pending scheduling)
+   - Will review records from previous cardiologist
+
+PROCEDURES REQUESTED:
+- Cardiac catheterization (CPT 93458)

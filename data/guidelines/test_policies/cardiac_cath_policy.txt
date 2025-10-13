@@ -1,0 +1,39 @@
+COVERAGE POLICY: Cardiac Catheterization
+
+POLICY NUMBER: LCD-2024-1055
+EFFECTIVE DATE: January 1, 2024
+
+COVERAGE CRITERIA:
+
+Medical Necessity Requirements:
+1. Patient must have completed non-invasive cardiac testing (stress test, echo, or cardiac CT)
+2. Abnormal findings on non-invasive testing suggesting coronary artery disease
+3. Symptoms consistent with coronary artery disease:
+   - Chest pain with typical anginal pattern
+   - Abnormal stress test
+   - Evidence of ischemia or infarction
+4. Documentation of cardiovascular risk factors
+5. Failed optimal medical therapy for stable angina (if applicable)
+6. No contraindications to procedure (severe renal dysfunction, contrast allergy without pre-medication)
+
+COVERED ICD-10 CODES:
+- I20.9: Angina pectoris
+- I25.10: Atherosclerotic heart disease
+- I21.9: Acute myocardial infarction
+
+COVERED CPT CODES:
+- 93458: Cardiac catheterization, left heart
+
+EXCLUSION CRITERIA:
+1. No prior non-invasive testing
+2. Normal non-invasive testing with atypical symptoms
+3. Severe uncorrected coagulopathy
+4. Patient refusal
+
+REQUIRED DOCUMENTATION:
+1. Clinical notes documenting symptoms
+2. Results of non-invasive cardiac testing
+3. Cardiovascular risk assessment
+4. Medication list
+5. Previous cardiac history
+6. EKG results

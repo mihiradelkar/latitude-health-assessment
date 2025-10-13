@@ -53,7 +53,7 @@ if response.status_code == 200:
     
     print("\n" + "=" * 50)
     print("\n📄 Full Response:")
-    print(json.dumps(result, indent=2))
+    # print(json.dumps(result, indent=2))
     
 else:
     print("❌ Error!")

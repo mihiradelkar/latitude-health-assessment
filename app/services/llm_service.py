@@ -44,7 +44,7 @@ Return ONLY a JSON object with this structure (no markdown, no explanations, jus
 {{
   "chief_complaint": "string or null",
   "history_present_illness": "string or null",
-  "past_medical_history": ["string"] or null,
+  "past_medical_history": ["string"] or [],
   "current_medications": [
     {{
       "name": "medication name",
@@ -52,14 +52,14 @@ Return ONLY a JSON object with this structure (no markdown, no explanations, jus
       "frequency": "how often",
       "route": "administration route or null"
     }}
-  ] or null,
+  ] or [],
   "allergies": [
     {{
       "substance": "allergen",
       "reaction": "reaction type",
       "severity": "mild/moderate/severe or null"
     }}
-  ] or null,
+  ] or [],
   "physical_exam": "string or null",
   "labs_imaging": [
     {{
@@ -68,7 +68,7 @@ Return ONLY a JSON object with this structure (no markdown, no explanations, jus
       "unit": "unit",
       "reference_range": "normal range or null"
     }}
-  ] or null,
+  ] or [],
   "assessment_plan": "string or null",
   "diagnoses": [
     {{
@@ -76,19 +76,19 @@ Return ONLY a JSON object with this structure (no markdown, no explanations, jus
       "system": "ICD-10",
       "display": "diagnosis description"
     }}
-  ] or null,
+  ] or [],
   "procedures": [
     {{
       "code": "CPT code",
       "system": "CPT",
       "display": "procedure description"
     }}
-  ] or null
+  ] or []
 }}
 
 Rules:
 - Return ONLY the JSON object, nothing else
-- Use null for missing information
+- Use empty list for missing information
 - Extract ICD-10 codes from diagnoses where mentioned
 - Extract CPT codes from procedures where mentioned
 - Parse all medications with their details"""
@@ -110,7 +110,7 @@ Rules:
             print("\n" + "="*50)
             print("RAW LLM RESPONSE:")
             print("="*50)
-            print(response_text[:500])  # Print first 500 chars
+            # print(response_text[:500])  # Print first 500 chars
             print("="*50 + "\n")
             
             # Clean and extract JSON
@@ -118,7 +118,7 @@ Rules:
             
             print("EXTRACTED JSON:")
             print("="*50)
-            print(json_text[:500])
+            # print(json_text[:500])
             print("="*50 + "\n")
             
             # Parse JSON
@@ -144,7 +144,7 @@ Rules:
             
         except json.JSONDecodeError as e:
             print(f"\n❌ JSON parsing error: {e}")
-            print(f"Attempted to parse: {json_text[:200]}...")
+            # print(f"Attempted to parse: {json_text[:200]}...")
             raise ValueError(f"Failed to parse LLM response as JSON: {str(e)}")
         except Exception as e:
             print(f"\n❌ LLM service error: {e}")
@@ -156,25 +156,36 @@ Rules:
         """
         
         prompt = f"""You are a clinical decision support expert. Answer the question using the provided context.
-
-Context:
-{json.dumps(context, indent=2)}
-
-Question: {question}
-
-Return ONLY valid JSON with this structure:
-{{
-  "answer": "detailed answer",
-  "reasoning": ["reason 1", "reason 2"],
-  "confidence": 0.85,
-  "citations": [
+    
+    Context:
+    {json.dumps(context, indent=2)}
+    
+    Question: {question}
+    
+    Return ONLY valid JSON with this exact structure:
     {{
-      "claim": "specific claim",
-      "source": "where in context"
+      "final_decision": "approved" | "denied" | "needs_more_info",
+      "answer": "detailed explanation of the decision",
+      "reasoning": [
+        "specific reason 1",
+        "specific reason 2"
+      ],
+      "confidence": 0.85,
+      "citations": [
+        {{
+          "claim": "specific claim made",
+          "source": "where in context this comes from (e.g., patient_data.conditions[0] or coverage_policy.coverage_criteria[1])"
+        }}
+      ]
     }}
-  ]
-}}"""
-
+    
+    CRITICAL: The "final_decision" field must be EXACTLY one of these three strings:
+    - "approved"
+    - "denied"  
+    - "needs_more_info"
+    
+    Return ONLY the JSON, no additional text."""
+    
         try:
             message = self.client.messages.create(
                 model=self.model,
@@ -187,7 +198,19 @@ Return ONLY valid JSON with this structure:
             
             response_text = message.content[0].text
             json_text = self._extract_json_from_response(response_text)
-            return json.loads(json_text)
+            result = json.loads(json_text)
+            
+            # Validate that final_decision exists and is valid
+            if 'final_decision' not in result:
+                print("⚠️  Warning: LLM didn't return final_decision, defaulting to needs_more_info")
+                result['final_decision'] = 'needs_more_info'
+            
+            valid_decisions = {'approved', 'denied', 'needs_more_info'}
+            if result['final_decision'] not in valid_decisions:
+                print(f"⚠️  Warning: Invalid decision '{result['final_decision']}', defaulting to needs_more_info")
+                result['final_decision'] = 'needs_more_info'
+            
+            return result
             
         except Exception as e:
             print(f"Query error: {e}")

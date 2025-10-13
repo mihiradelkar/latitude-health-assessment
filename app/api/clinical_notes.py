@@ -6,6 +6,7 @@ import uuid
 from app.models.clinical_note import ClinicalNoteRequest, ClinicalNoteResponse
 from app.services.llm_service import llm_service
 from app.services.fhir_mapper import fhir_mapper
+import json
 
 router = APIRouter()
 
@@ -26,7 +27,9 @@ async def process_clinical_note(request: ClinicalNoteRequest):
         
         # Structure the note using LLM
         structured_data = await llm_service.structure_clinical_note(request.note_text)
-        
+        # Save structured_data as JSON file
+        with open(f"clinical_note_{note_id}.json", "w") as f:
+            json.dump(structured_data.dict(), f, default=str, indent=2)
         # Add patient info if provided
         if request.patient_id:
             structured_data.patient_id = request.patient_id

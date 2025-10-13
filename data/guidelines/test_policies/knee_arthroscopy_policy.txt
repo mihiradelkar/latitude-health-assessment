@@ -1,0 +1,39 @@
+COVERAGE POLICY: Knee Arthroscopy - Meniscal Tears
+
+POLICY NUMBER: LCD-2024-0892
+EFFECTIVE DATE: January 1, 2024
+
+COVERAGE CRITERIA:
+
+Medical Necessity Requirements:
+1. Documented symptomatic meniscal tear confirmed by MRI within past 6 months
+2. Pain level documented at 5/10 or greater on validated pain scale (VAS, NRS)
+3. Failed conservative treatment for minimum of 6 weeks including:
+   - Physical therapy (formal program, minimum 6 weeks)
+   - NSAIDs or anti-inflammatory medications trial
+   - Activity modification
+4. Mechanical symptoms (locking, clicking, catching) or functional limitation
+5. MRI findings consistent with surgical indication (Grade II-III tear)
+
+COVERED ICD-10 CODES:
+- M23.211: Derangement of medial meniscus due to old tear, right knee
+- M23.311: Other meniscus derangements, right knee
+- M17.11: Unilateral primary osteoarthritis, right knee
+
+COVERED CPT CODES:
+- 29881: Arthroscopy, knee, surgical; with meniscectomy
+- 29880: Arthroscopy, knee, surgical; with meniscus repair
+
+EXCLUSION CRITERIA:
+1. Degenerative meniscal tears in patients over 65 without mechanical symptoms
+2. Asymptomatic meniscal tears
+3. Active knee infection
+4. Severe osteoarthritis (Grade IV) where arthroscopy unlikely to benefit
+
+REQUIRED DOCUMENTATION:
+1. Clinical notes documenting duration and nature of symptoms
+2. MRI results with radiologist interpretation
+3. Documentation of physical therapy with dates and provider
+4. Medication trial documentation
+5. Pain scale assessment (VAS or NRS)
+6. Physical examination findings

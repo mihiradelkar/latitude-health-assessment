@@ -1,0 +1,33 @@
+PATIENT: Michael Brown
+MRN: PT-55443
+DATE: 2025-01-22
+ENCOUNTER: Primary Care Visit
+
+CHIEF COMPLAINT:
+Lower back pain for 2 weeks
+
+HISTORY OF PRESENT ILLNESS:
+32-year-old male presents with acute lower back pain that started 2 weeks ago after moving furniture. Pain is localized to lumbar region, no radiation. Rates pain as 4/10. Has been taking over-the-counter ibuprofen with some relief. No previous back problems. No neurological symptoms.
+
+PAST MEDICAL HISTORY:
+- None significant
+
+CURRENT MEDICATIONS:
+- Ibuprofen 400mg PRN
+
+ALLERGIES:
+- NKDA
+
+PHYSICAL EXAMINATION:
+Vitals: BP 122/78, HR 68
+Back: Mild tenderness over L3-L4, no spasm, full ROM, normal gait, negative straight leg raise, intact sensation and reflexes
+
+LABS AND IMAGING:
+- None performed
+
+ASSESSMENT AND PLAN:
+1. Acute lower back strain (M54.5)
+   - Continue ibuprofen
+   - Home exercises recommended
+   - Follow up in 2 weeks if not improved
+   - Consider imaging if symptoms persist beyond 6 weeks

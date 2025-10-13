@@ -1,0 +1,38 @@
+PATIENT: Sarah Johnson
+MRN: PT-98765
+DATE: 2025-01-20
+ENCOUNTER: Orthopedic Follow-up
+
+CHIEF COMPLAINT:
+Chronic right knee pain, requesting knee arthroscopy
+
+HISTORY OF PRESENT ILLNESS:
+45-year-old female with progressive right knee pain for 9 months. Pain rated 7/10 on VAS scale, worse with stairs and prolonged standing. Mechanical symptoms including clicking and occasional locking. Failed 8 weeks of formal physical therapy at Anderson PT Center (completed 12/15/2024). Tried Naproxen 500mg BID for 6 weeks with minimal relief. Activity modification including avoiding high-impact activities for 4 months unsuccessful. No improvement with conservative measures.
+
+PAST MEDICAL HISTORY:
+- Osteoarthritis, right knee (M17.11)
+- Obesity (BMI 32) (E66.9)
+
+CURRENT MEDICATIONS:
+- Naproxen 500mg PO BID PRN
+- Glucosamine 1500mg daily
+
+ALLERGIES:
+- Codeine (nausea)
+
+PHYSICAL EXAMINATION:
+Vitals: BP 128/82, HR 72, Temp 98.4F, Weight 185 lbs, Height 5'4" (BMI 32)
+Right Knee: Moderate effusion, tenderness over medial joint line, positive McMurray test, limited ROM 10-110 degrees, no instability
+
+LABS AND IMAGING:
+- MRI Right Knee (01/05/2025): Grade III medial meniscus tear with complex tear pattern. Moderate degenerative changes. Subchondral edema present.
+- X-ray Right Knee (01/05/2025): Moderate joint space narrowing, osteophyte formation
+
+ASSESSMENT AND PLAN:
+1. Right knee medial meniscus tear (M23.211) - symptomatic, failed conservative therapy
+   - Recommend arthroscopic partial meniscectomy
+   - Patient counseled on risks/benefits
+   - Pre-operative clearance obtained
+
+PROCEDURES REQUESTED:
+- Arthroscopic partial meniscectomy, medial meniscus (CPT 29881)
