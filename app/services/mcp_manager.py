@@ -108,111 +108,154 @@ class MCPContextManager:
             "clinical_context": clinical_note[:2000]
         }
         
-        # Much simpler, clearer prompt with examples
+        # Extremely explicit decision logic
         question = """
-    Evaluate this prior authorization request by checking if the patient meets the medical criteria.
+    Evaluate this prior authorization request step-by-step.
     
-    DECISION RULES (Simple and Clear):
+    STEP-BY-STEP EVALUATION:
     
-    ✅ "approved" = Patient meets ALL medical requirements
-       - Has the required diagnosis (ICD-10 code matches)
-       - Requested procedure is covered (CPT code matches)  
-       - Meets all medical necessity requirements
-       - No exclusions apply
-       - Information is available (anywhere: structured data, observations, OR clinical notes)
+    Step 1: Check Diagnosis Match
+    Question: Does patient_data.conditions contain ANY code from coverage_policy.covered_icd10_codes?
+    → If YES: ✅ Proceed to Step 2
+    → If NO: ❌ STOP → final_decision = "denied"
     
-    ❌ "denied" = Patient does NOT meet medical requirements
-       - Missing required diagnosis
-       - Procedure not covered
-       - Fails specific medical criteria (e.g., treatment too short, wrong diagnosis)
-       - Has exclusion that applies
+    Step 2: Check Procedure Coverage
+    Question: Does patient_data.procedures contain ANY code from coverage_policy.covered_cpt_codes?
+    → If YES: ✅ Proceed to Step 3  
+    → If NO: ❌ STOP → final_decision = "denied"
     
-    ⚠️ "needs_more_info" = Cannot make decision (RARE - use sparingly)
-       - Absolutely no information about critical requirement
-       - Contradictory information
-       - Use ONLY when you truly cannot determine if criteria are met
+    Step 3: Evaluate Each Medical Necessity Criterion
+    For EACH item in coverage_policy.coverage_criteria, determine if it's MET:
     
-    EVALUATION STEPS:
+    MET = Information exists ANYWHERE:
+    - In clinical_context (clinical notes)
+    - In patient_data.conditions
+    - In patient_data.medications  
+    - In patient_data.observations
+    - In patient_data.procedures
     
-    Step 1: Check Diagnosis
-    → Does patient_data.conditions contain ANY of coverage_policy.covered_icd10_codes?
-    → If YES = ✅ | If NO = ❌ denied
+    Examples:
+    - Criterion: "pain for 6+ weeks" → "pain for past 6 weeks" in notes = ✅ MET
+    - Criterion: "failed PT minimum 4 weeks" → "PT for 3 months" in notes = ✅ MET
+    - Criterion: "pain 5/10+" → "pain rated 8/10" in notes = ✅ MET
+    - Criterion: "MRI confirmed" → "MRI shows herniation" in notes = ✅ MET
     
-    Step 2: Check Procedure Coverage  
-    → Does patient_data.procedures contain ANY of coverage_policy.covered_cpt_codes?
-    → If YES = ✅ | If NO = ❌ denied
+    NOT MET = Information is completely absent:
+    - Criterion: "failed PT" → NO mention of PT anywhere = ❌ NOT MET
     
-    Step 3: Check Medical Necessity (coverage_policy.coverage_criteria)
-    For EACH criterion, check if information exists ANYWHERE (patient_data, observations, OR clinical_context):
-    
-    Example criteria checks:
-    - "pain for 6 weeks" → Look for: "pain for 6 weeks", "pain for 18 months", "pain for past 6 weeks" = ✅ MET
-    - "failed physical therapy" → Look for: "PT for 3 months", "physical therapy", "completed PT" = ✅ MET  
-    - "MRI confirmed" → Look for: "MRI shows", "MRI Lumbar Spine", imaging results = ✅ MET
-    - "pain rated 5/10+" → Look for: "pain 8/10", "rated 7/10", any pain scale = ✅ MET
-    
-    IF all criteria have supporting info (in ANY form) = ✅ proceed
-    IF any criterion has ZERO mention = check if truly critical
-    IF critical criterion completely missing = ⚠️ needs_more_info
+    Count Results:
+    - Total criteria: X
+    - MET: Y
+    - NOT MET: Z
     
     Step 4: Check Exclusions
-    → Does patient have any coverage_policy.exclusion_criteria?
-    → If YES = ❌ denied | If NO = ✅ proceed
+    Question: Does patient have ANY condition/factor from coverage_policy.exclusion_criteria?
+    → If YES: ❌ STOP → final_decision = "denied"
+    → If NO: ✅ Proceed to Step 5
     
-    FINAL DECISION:
-    - Diagnosis ✅ + Procedure ✅ + Criteria ✅ + No Exclusions ✅ = "approved"
-    - Any medical requirement failed = "denied"  
-    - Cannot determine due to missing info = "needs_more_info" (rare)
+    Step 5: FINAL DECISION (Follow this logic EXACTLY):
     
-    IMPORTANT - What Counts as "Documented":
-    ✅ Mentioned in clinical_context (e.g., "patient had PT for 3 months")
-    ✅ In patient_data.observations (e.g., HbA1c value)
-    ✅ In patient_data.medications (e.g., taking ibuprofen)
-    ✅ In patient_data.conditions (e.g., diagnosis code)
+    DECISION TREE:
+    ```
+    IF (Diagnosis ✅) AND (Procedure ✅) AND (ALL criteria MET) AND (No exclusions ✅):
+    → final_decision = "approved"
+    → confidence = 0.9 or higher
+    ELSE IF (Diagnosis ❌) OR (Procedure ❌) OR (Exclusion exists ❌):
+    → final_decision = "denied"
+    → confidence = 0.9 or higher
+    ELSE IF (Most criteria MET but 1-2 NOT MET):
+    → final_decision = "denied" (requirements not fulfilled)
+    → confidence = 0.85 or higher
+    ELSE IF (Many criteria NOT MET due to no information):
+    → final_decision = "needs_more_info"
+    → confidence = 0.3-0.6
+    ```
+    CRITICAL RULES (Follow These Exactly):
     
-    Don't require perfect formatting - if the information exists anywhere, it counts!
+    Rule 1: If ALL medical necessity criteria are MET → MUST be "approved"
+            Never say "needs_more_info" if all criteria are already met!
     
-    EXAMPLES OF GOOD DECISIONS:
+    Rule 2: If most criteria are MET but 1-2 are clearly NOT MET → "denied"
+            (Patient didn't fulfill requirements)
     
-    Example 1 - APPROVED:
-    - Patient has M51.16 ✅ (matches covered ICD-10)
-    - Requests CPT 62323 ✅ (matches covered CPT)
-    - Clinical notes say "PT for 3 months" ✅ (meets "minimum 4 weeks PT")
-    - Clinical notes say "pain 8/10" ✅ (meets "pain 5/10+")
-    - Clinical notes say "MRI shows herniation" ✅ (meets "MRI confirmed")
-    - No exclusions ✅
-    → final_decision: "approved"
+    Rule 3: Only use "needs_more_info" if MANY criteria have no information at all
+            (You genuinely cannot determine if patient qualifies)
     
-    Example 2 - DENIED:
-    - Patient has M54.5 (acute back strain) ❌ (NOT in covered ICD-10 codes)
-    - Only 2 weeks of symptoms ❌ (fails "minimum 6 weeks" criterion)  
-    → final_decision: "denied"
+    Rule 4: "needs_more_info" should be RARE (<10% of cases)
     
-    Example 3 - DENIED (not needs_more_info):
-    - Patient has required diagnosis ✅
-    - No mention of physical therapy at all ❌ (but this is a REQUIREMENT)
-    - Policy clearly requires "failed PT" and there's zero evidence of PT
-    → final_decision: "denied" (didn't meet requirement, not just missing doc)
+    VALIDATION CHECK (Before returning your decision):
     
-    Example 4 - NEEDS_MORE_INFO (rare):
-    - Patient has required diagnosis ✅
-    - Clinical notes are extremely vague: "some back pain, maybe tried something"
-    - Truly cannot determine if ANY treatments were attempted
-    → final_decision: "needs_more_info"
+    Self-check: Did I find that all criteria are MET?
+    → If YES: My decision MUST be "approved" (not needs_more_info)
+    → If NO: Check how many are NOT MET
+       - 1-2 NOT MET = "denied"  
+       - 3+ NOT MET = "needs_more_info" only if truly no information
     
-    Return JSON with:
+    EXAMPLES:
+    
+    Example A - APPROVED:
+    ✅ Diagnosis: M51.16 (matches covered codes)
+    ✅ Procedure: CPT 62323 (matches covered codes)
+    ✅ All 7 criteria checked:
+       1. Pain 6+ weeks: "pain for past 6 weeks" in notes → MET
+       2. MRI confirmed: "MRI shows herniation" in notes → MET
+       3. Failed PT 4+ weeks: "PT for 3 months" in notes → MET
+       4. Failed NSAIDs: "ibuprofen 600mg" + "minimal relief" → MET
+       5. Activity modification: "pain interferes with activities" → MET
+       6. Pain 5/10+: "pain rated 8/10" in notes → MET
+       7. No emergency: No cauda equina mentioned → MET
+    ✅ No exclusions
+    Result: 7/7 criteria MET
+    → final_decision: "approved", confidence: 0.95
+    
+    Example B - DENIED:
+    ✅ Diagnosis: M51.16 (matches)
+    ✅ Procedure: CPT 62323 (matches)
+    ❌ Criteria results:
+       1. Pain 6+ weeks: Only "2 weeks of pain" → NOT MET
+       2. MRI confirmed: No imaging mentioned → NOT MET
+       3. Failed PT: No PT mentioned → NOT MET
+       4. Failed NSAIDs: Taking ibuprofen → MET
+       5-7: Various → Some MET, some NOT MET
+    Result: Only 2/7 criteria MET clearly
+    → final_decision: "denied", confidence: 0.90
+    (Patient doesn't meet requirements)
+    
+    Example C - NEEDS_MORE_INFO:
+    ✅ Diagnosis: M51.16 (matches)
+    ✅ Procedure: CPT 62323 (matches)
+    ? Criteria results:
+       Clinical notes say: "chronic back pain, some treatments tried"
+       Cannot determine: Which treatments? How long? What results?
+       Only 1/7 criteria can be confirmed
+    Result: 1/7 MET, 6/7 completely unknown
+    → final_decision: "needs_more_info", confidence: 0.45
+    
+    RETURN FORMAT:
     {
       "final_decision": "approved" | "denied" | "needs_more_info",
-      "answer": "1-2 sentence summary of decision",
-      "reasoning": ["criterion 1: met/not met because...", "criterion 2: ..."],
+      "answer": "1-2 sentence summary",
+      "reasoning": [
+        "Step 1: Diagnosis - [result]",
+        "Step 2: Procedure - [result]",  
+        "Step 3: Criteria evaluation - [X/Y met]",
+        "Criterion 1: [met/not met] because...",
+        "Criterion 2: [met/not met] because...",
+        ...
+        "Step 4: Exclusions - [result]",
+        "Step 5: Final decision - [logic applied]"
+      ],
       "confidence": 0.0-1.0,
-      "citations": [{"claim": "...", "source": "patient_data.conditions[0]"}]
+      "citations": [{"claim": "...", "source": "..."}]
     }
+    
+    REMEMBER: If you found that ALL criteria are MET, you CANNOT say "needs_more_info". 
+    You must say "approved". There is no logical reason to need more info if everything is already confirmed!
     """
         
         result = await llm_service.query_with_context(question, combined_context)
         return result
-    
+
     async def extract_guideline_criteria(self, guideline_text: str) -> Dict[str, Any]:
         """
         Use LLM to extract structured criteria from unstructured guideline documents
