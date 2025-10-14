@@ -1,0 +1,62 @@
+{
+  "title": "Lumbar Epidural Steroid Injections",
+  "coverage_criteria": [
+    "Patient must have documented radicular pain (sciatica) radiating below the knee for at least 6 weeks",
+    "Diagnosis of herniated disc confirmed by MRI or CT scan within past 6 months",
+    "Failed conservative treatment including physical therapy for minimum of 4 weeks",
+    "Failed conservative treatment including trial of NSAIDs or other anti-inflammatory medications",
+    "Failed conservative treatment including activity modification",
+    "Pain level of 5/10 or greater on validated pain scale",
+    "No neurological emergency (cauda equina syndrome, progressive motor weakness)"
+  ],
+  "exclusion_criteria": [
+    "Active infection at injection site",
+    "Coagulopathy or use of anticoagulants",
+    "Allergy to local anesthetics or corticosteroids",
+    "Previous epidural steroid injection within past 2 weeks",
+    "More than 3 injections in a 6-month period",
+    "Non-specific low back pain without radiculopathy",
+    "Prophylactic injections",
+    "Injections performed more frequently than every 2 weeks"
+  ],
+  "required_documentation": [
+    "Clinical notes documenting duration and nature of symptoms",
+    "Results of MRI or CT scan showing disc herniation",
+    "Documentation of failed conservative treatments with dates",
+    "Current medication list",
+    "Physical examination findings including neurological assessment",
+    "Pain assessment score"
+  ],
+  "covered_icd10_codes": [
+    {
+      "code": "M51.16",
+      "description": "Intervertebral disc disorders with radiculopathy, lumbar region"
+    },
+    {
+      "code": "M51.17",
+      "description": "Intervertebral disc disorders with radiculopathy, lumbosacral region"
+    },
+    {
+      "code": "M51.26",
+      "description": "Other intervertebral disc displacement, lumbar region"
+    },
+    {
+      "code": "M51.27",
+      "description": "Other intervertebral disc displacement, lumbosacral region"
+    },
+    {
+      "code": "M54.16",
+      "description": "Radiculopathy, lumbar region"
+    },
+    {
+      "code": "M54.17",
+      "description": "Radiculopathy, lumbosacral region"
+    }
+  ],
+  "covered_cpt_codes": [
+    {
+      "code": "62323",
+      "description": "Injection(s), of diagnostic or therapeutic substance(s), lumbar or sacral (caudal) epidural"
+    }
+  ]
+}

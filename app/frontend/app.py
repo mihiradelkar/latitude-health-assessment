@@ -16,6 +16,7 @@ with st.sidebar:
     st.info("""
     This system demonstrates:
     - 📝 Clinical note structuring with LLM
+    - 📄 PDF/Image upload with OCR
     - 🔗 FHIR resource mapping
     - 🧠 Model Context Protocol (MCP)
     - ⚕️ Prior authorization evaluation
@@ -32,17 +33,18 @@ with st.sidebar:
     except:
         st.error("❌ API Not Running")
 
-# Main tabs
-tab1, tab2, tab3, tab4 = st.tabs([
-    "📝 Process Clinical Note", 
+# Main tabs - Added Upload tab
+tab1, tab1_5, tab2, tab3, tab4 = st.tabs([
+    "📝 Process Clinical Note",
+    "📄 Upload Document (OCR)",
     "📋 Extract Guidelines", 
     "⚖️ Evaluate Prior Auth",
     "📊 View Results"
 ])
 
-# Tab 1: Process Clinical Note
+# Tab 1: Process Clinical Note (existing code)
 with tab1:
-    st.header("Step 1: Process Clinical Note")
+    st.header("Step 1A: Process Clinical Note (Text)")
     
     col1, col2 = st.columns([2, 1])
     
@@ -90,7 +92,7 @@ PROCEDURES REQUESTED:
         patient_id = st.text_input("Patient ID", value="PT-12345")
         encounter_date = st.date_input("Encounter Date", value=datetime(2025, 1, 15))
     
-    if st.button("🔄 Process Note", type="primary"):
+    if st.button("🔄 Process Note", type="primary", key="process_text"):
         with st.spinner("Processing clinical note with LLM..."):
             try:
                 response = requests.post(
@@ -125,6 +127,102 @@ PROCEDURES REQUESTED:
                     
                     with st.expander("🔗 View FHIR Resources"):
                         st.json(result.get('fhir_resources'))
+                    
+                else:
+                    st.error(f"Error: {response.text}")
+            except Exception as e:
+                st.error(f"Error: {str(e)}")
+
+# Tab 1.5: Upload Document with OCR (NEW)
+with tab1_5:
+    st.header("Step 1B: Upload Document (PDF/Image)")
+    
+    st.info("📄 Upload a PDF or image of a clinical note. The system will use OCR to extract text and then process it.")
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        uploaded_file = st.file_uploader(
+            "Choose a file",
+            type=['pdf', 'jpg', 'jpeg', 'png', 'bmp', 'tiff'],
+            help="Supported formats: PDF, JPG, PNG, BMP, TIFF (Max 10MB)"
+        )
+        
+        if uploaded_file is not None:
+            st.success(f"✅ File loaded: {uploaded_file.name} ({uploaded_file.size / 1024:.1f} KB)")
+            
+            # Show preview for images
+            if uploaded_file.type.startswith('image'):
+                st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
+    
+    with col2:
+        st.subheader("Patient Info")
+        patient_id_upload = st.text_input("Patient ID", value="PT-UPLOAD", key="patient_id_upload")
+        encounter_date_upload = st.date_input("Encounter Date", value=datetime(2025, 1, 15), key="encounter_date_upload")
+    
+    if st.button("🔄 Process Document with OCR", type="primary", disabled=uploaded_file is None):
+        with st.spinner("Processing document with OCR... This may take a minute..."):
+            try:
+                # Prepare form data
+                files = {'file': (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
+                data = {
+                    'patient_id': patient_id_upload,
+                    'encounter_date': str(encounter_date_upload)
+                }
+                
+                # Upload and process
+                response = requests.post(
+                    f"{BASE_URL}/clinical-notes/upload",
+                    files=files,
+                    data=data
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    st.session_state['note_result'] = result
+                    st.session_state['note_id'] = result['note_id']
+                    
+                    st.success(f"✅ Document processed! ID: {result['note_id']}")
+                    
+                    # Show OCR metadata if available
+                    note_data = requests.get(f"{BASE_URL}/clinical-notes/{result['note_id']}").json()
+                    if 'ocr_metadata' in note_data:
+                        ocr_meta = note_data['ocr_metadata']
+                        st.subheader("📊 OCR Processing Info")
+                        
+                        col1, col2, col3, col4 = st.columns(4)
+                        with col1:
+                            st.metric("Method", ocr_meta.get('processing_method', 'N/A'))
+                        with col2:
+                            st.metric("Characters", ocr_meta.get('character_count', 0))
+                        with col3:
+                            st.metric("Words", ocr_meta.get('word_count', 0))
+                        with col4:
+                            if 'ocr_confidence' in ocr_meta:
+                                st.metric("OCR Confidence", f"{ocr_meta['ocr_confidence']:.1f}%")
+                            elif 'total_pages' in ocr_meta:
+                                st.metric("Pages", ocr_meta['total_pages'])
+                    
+                    # Show structured data
+                    structured = result['structured_data']
+                    
+                    st.subheader("📋 Extracted Medical Data")
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Diagnoses", len(structured.get('diagnoses', [])))
+                    with col2:
+                        st.metric("Medications", len(structured.get('current_medications', [])))
+                    with col3:
+                        st.metric("Procedures", len(structured.get('procedures', [])))
+                    
+                    with st.expander("📊 View Structured Data"):
+                        st.json(structured)
+                    
+                    with st.expander("🔗 View FHIR Resources"):
+                        st.json(result.get('fhir_resources'))
+                    
+                    with st.expander("📄 View Extracted Text"):
+                        st.text_area("OCR Extracted Text", value=structured.get('raw_note', ''), height=300)
                     
                 else:
                     st.error(f"Error: {response.text}")

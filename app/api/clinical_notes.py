@@ -1,17 +1,19 @@
-from fastapi import APIRouter, HTTPException
-from typing import Dict
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form
+from typing import Dict, Optional
 import time
 import uuid
 
 from app.models.clinical_note import ClinicalNoteRequest, ClinicalNoteResponse
 from app.services.llm_service import llm_service
 from app.services.fhir_mapper import fhir_mapper
+from app.services.document_processor import document_processor
 import json
 
 router = APIRouter()
 
 # In-memory storage for demo (replace with DB later)
 notes_storage: Dict[str, dict] = {}
+
 
 @router.post("/process", response_model=ClinicalNoteResponse)
 async def process_clinical_note(request: ClinicalNoteRequest):
@@ -27,9 +29,7 @@ async def process_clinical_note(request: ClinicalNoteRequest):
         
         # Structure the note using LLM
         structured_data = await llm_service.structure_clinical_note(request.note_text)
-        # Save structured_data as JSON file
-        with open(f"clinical_note_{note_id}.json", "w") as f:
-            json.dump(structured_data.dict(), f, default=str, indent=2)
+        
         # Add patient info if provided
         if request.patient_id:
             structured_data.patient_id = request.patient_id
@@ -59,6 +59,77 @@ async def process_clinical_note(request: ClinicalNoteRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing note: {str(e)}")
 
+
+@router.post("/upload", response_model=ClinicalNoteResponse)
+async def upload_clinical_document(
+    file: UploadFile = File(...),
+    patient_id: Optional[str] = Form(None),
+    encounter_date: Optional[str] = Form(None)
+):
+    """
+    Upload and process a clinical document (PDF or image) with OCR
+    """
+    
+    start_time = time.time()
+    
+    try:
+        # Process uploaded file with OCR
+        print(f"Processing uploaded file: {file.filename}")
+        extracted_text, ocr_metadata = await document_processor.process_upload(file)
+        
+        print(f"OCR completed. Extracted {ocr_metadata['character_count']} characters")
+        print(f"OCR Metadata: {ocr_metadata}")
+        
+        if not extracted_text or len(extracted_text.strip()) < 50:
+            raise HTTPException(
+                status_code=400,
+                detail="Could not extract sufficient text from document. Please ensure the document is readable."
+            )
+        
+        # Generate unique note ID
+        note_id = str(uuid.uuid4())
+        
+        # Structure the extracted text using LLM
+        print("Structuring clinical note with LLM...")
+        structured_data = await llm_service.structure_clinical_note(extracted_text)
+        
+        # Add patient info if provided
+        if patient_id:
+            structured_data.patient_id = patient_id
+        if encounter_date:
+            structured_data.encounter_date = encounter_date
+        
+        # Map to FHIR resources
+        fhir_bundle = fhir_mapper.map_to_fhir_bundle(structured_data)
+        
+        # Calculate processing time
+        processing_time = (time.time() - start_time) * 1000  # ms
+        
+        # Store in memory with OCR metadata
+        notes_storage[note_id] = {
+            "structured_data": structured_data.dict(),
+            "fhir_resources": fhir_bundle,
+            "processed_at": structured_data.processed_at.isoformat(),
+            "ocr_metadata": ocr_metadata,
+            "original_filename": file.filename
+        }
+        
+        print(f"✅ Document processed successfully in {processing_time:.0f}ms")
+        
+        return ClinicalNoteResponse(
+            note_id=note_id,
+            structured_data=structured_data,
+            fhir_resources=fhir_bundle,
+            processing_time_ms=processing_time
+        )
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error processing uploaded document: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing document: {str(e)}")
+
+
 @router.get("/{note_id}")
 async def get_clinical_note(note_id: str):
     """
@@ -68,6 +139,7 @@ async def get_clinical_note(note_id: str):
         raise HTTPException(status_code=404, detail="Note not found")
     
     return notes_storage[note_id]
+
 
 @router.get("/")
 async def list_clinical_notes():

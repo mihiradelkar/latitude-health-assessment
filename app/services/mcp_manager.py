@@ -108,149 +108,159 @@ class MCPContextManager:
             "clinical_context": clinical_note[:2000]
         }
         
-        # Extremely explicit decision logic
         question = """
-    Evaluate this prior authorization request step-by-step.
+    Evaluate this prior authorization request. Be PRACTICAL and understand clinical documentation standards.
+    
+    CRITICAL RULES FOR TIME:
+    - 1 month = 4 weeks = ~30 days
+    - 3 months = 12 weeks = ~90 days
+    - 6 months = 24 weeks = ~180 days
+    - If a note says "3 months", that EXCEEDS a "6 weeks" requirement!
+    
+    CRITICAL RULES FOR DOCUMENTATION:
+    When a clinician writes: "Failed conservative management x [duration] including:"
+    → That duration applies to ALL listed treatments below it
+    → This is STANDARD medical documentation
+    
+    Example:
+    "Failed conservative management x 6 months including:
+    - Physical therapy
+    - NSAIDs
+    - Activity modification"
+    
+    This means: ALL three were tried during the 6-month period. Each one was part of the 6-month plan.
+    
+    CRITICAL RULES FOR "AT LEAST" REQUIREMENTS:
+    If policy says: "Failed at least TWO of the following for ≥6 weeks"
+    → Once you find TWO that meet the requirement, the criterion is SATISFIED
+    → You do NOT need all items to have explicit durations
+    → You do NOT need to verify the third, fourth, or fifth items
     
     STEP-BY-STEP EVALUATION:
     
-    Step 1: Check Diagnosis Match
-    Question: Does patient_data.conditions contain ANY code from coverage_policy.covered_icd10_codes?
-    → If YES: ✅ Proceed to Step 2
-    → If NO: ❌ STOP → final_decision = "denied"
+    Step 1: Check Diagnosis
+    Does patient have required diagnosis code or clinical diagnosis mentioned in coverage criteria?
+    → If YES = ✅
     
-    Step 2: Check Procedure Coverage
-    Question: Does patient_data.procedures contain ANY code from coverage_policy.covered_cpt_codes?
-    → If YES: ✅ Proceed to Step 3  
-    → If NO: ❌ STOP → final_decision = "denied"
+    Step 2: Check Procedure
+    Is requested CPT code in covered procedures?
+    → If YES = ✅
     
-    Step 3: Evaluate Each Medical Necessity Criterion
-    For EACH item in coverage_policy.coverage_criteria, determine if it's MET:
+    Step 3: Evaluate Medical Necessity Criteria
+    For EACH criterion in coverage_policy.coverage_criteria:
     
-    MET = Information exists ANYWHERE:
-    - In clinical_context (clinical notes)
-    - In patient_data.conditions
-    - In patient_data.medications  
-    - In patient_data.observations
-    - In patient_data.procedures
+    A. RECOGNIZE PATTERNS:
+       Pattern 1: "Failed conservative therapy x [duration] including [list]"
+       → Duration applies to entire list
     
-    Examples:
-    - Criterion: "pain for 6+ weeks" → "pain for past 6 weeks" in notes = ✅ MET
-    - Criterion: "failed PT minimum 4 weeks" → "PT for 3 months" in notes = ✅ MET
-    - Criterion: "pain 5/10+" → "pain rated 8/10" in notes = ✅ MET
-    - Criterion: "MRI confirmed" → "MRI shows herniation" in notes = ✅ MET
+       Pattern 2: "at least TWO of: [list]" for minimum duration
+       → Once TWO items meet duration, criterion is MET
+       → Don't require all items to have durations
     
-    NOT MET = Information is completely absent:
-    - Criterion: "failed PT" → NO mention of PT anywhere = ❌ NOT MET
+       Pattern 3: "[item] ([details])"
+       → Details in parentheses count as documentation
+       → "NSAIDs (ibuprofen 800mg TID x 3 months)" = FULLY DOCUMENTED
     
-    Count Results:
-    - Total criteria: X
-    - MET: Y
-    - NOT MET: Z
+    B. TIME COMPARISON (Use this logic):
+       Required: "≥6 weeks"
+       Found: "3 months" or "12 weeks" or "90 days"
+       Comparison: 3 months = 12 weeks = ~90 days > 6 weeks ✅ EXCEEDS requirement
+    
+       Required: "≥12 weeks"
+       Found: "3 months"
+       Comparison: 3 months = 12 weeks ✅ MEETS requirement
+    
+    C. COUNT MODALITIES (for "at least X" requirements):
+       If policy says "at least TWO modalities for ≥6 weeks":
+    
+       Count modalities that meet ≥6 weeks:
+       1. Physical therapy (12 sessions) ✅
+       2. NSAIDs (3 months = 12 weeks) ✅
+    
+       Result: Found 2 modalities ≥ 6 weeks
+       Requirement: at least 2 modalities ≥ 6 weeks
+       → Criterion is MET ✅
+    
+       Do NOT deny because other items lack explicit durations!
     
     Step 4: Check Exclusions
-    Question: Does patient have ANY condition/factor from coverage_policy.exclusion_criteria?
-    → If YES: ❌ STOP → final_decision = "denied"
-    → If NO: ✅ Proceed to Step 5
+    Any exclusion criteria present?
     
-    Step 5: FINAL DECISION (Follow this logic EXACTLY):
+    Step 5: Make Decision
     
-    DECISION TREE:
+    DECISION LOGIC:
     ```
-    IF (Diagnosis ✅) AND (Procedure ✅) AND (ALL criteria MET) AND (No exclusions ✅):
+    IF Diagnosis ✅ AND Procedure ✅ AND All required criteria MET ✅ AND No exclusions ✅:
     → final_decision = "approved"
-    → confidence = 0.9 or higher
-    ELSE IF (Diagnosis ❌) OR (Procedure ❌) OR (Exclusion exists ❌):
+    ELSE IF Missing diagnosis OR procedure not covered OR has exclusion:
     → final_decision = "denied"
-    → confidence = 0.9 or higher
-    ELSE IF (Most criteria MET but 1-2 NOT MET):
-    → final_decision = "denied" (requirements not fulfilled)
-    → confidence = 0.85 or higher
-    ELSE IF (Many criteria NOT MET due to no information):
-    → final_decision = "needs_more_info"
-    → confidence = 0.3-0.6
+    ELSE:
+    → final_decision = "needs_more_info" (only if truly unclear)
     ```
-    CRITICAL RULES (Follow These Exactly):
+    COMMON MISTAKES TO AVOID:
+    ❌ Treating "12 weeks" as insufficient for "≥6 weeks" requirement
+       ✅ 12 weeks > 6 weeks, so requirement is MET
     
-    Rule 1: If ALL medical necessity criteria are MET → MUST be "approved"
-            Never say "needs_more_info" if all criteria are already met!
+    ❌ Requiring ALL modalities to have durations when policy says "at least TWO"
+       ✅ Once TWO modalities meet duration, requirement is MET
     
-    Rule 2: If most criteria are MET but 1-2 are clearly NOT MET → "denied"
-            (Patient didn't fulfill requirements)
+    ❌ Ignoring "x 6 months including:" as a duration statement
+       ✅ This means ALL listed items were tried during that period
     
-    Rule 3: Only use "needs_more_info" if MANY criteria have no information at all
-            (You genuinely cannot determine if patient qualifies)
+    ❌ Treating parenthetical details as missing documentation
+       ✅ "(ibuprofen 800mg TID x 3 months)" is COMPLETE documentation
     
-    Rule 4: "needs_more_info" should be RARE (<10% of cases)
+    ❌ Denying because you want "more detail" when requirements are met
+       ✅ If medical necessity is met, approve - don't ask for documentation perfection
     
-    VALIDATION CHECK (Before returning your decision):
+    VALIDATION CHECKLIST (Before returning decision):
+    □ Did I convert time correctly? (3 months = 12 weeks = exceeds 6 weeks)
+    □ Did I recognize "x [duration] including:" applies to all items?
+    □ Did I stop counting after finding enough items for "at least X" requirement?
+    □ Did I check if medical necessity is actually met, not just documentation format?
     
-    Self-check: Did I find that all criteria are MET?
-    → If YES: My decision MUST be "approved" (not needs_more_info)
-    → If NO: Check how many are NOT MET
-       - 1-2 NOT MET = "denied"  
-       - 3+ NOT MET = "needs_more_info" only if truly no information
+    EXAMPLE - This Should Be APPROVED:
     
-    EXAMPLES:
+    Patient has radiculopathy (M54.16) ✅
+    Requests MRI (CPT 72148) ✅
     
-    Example A - APPROVED:
-    ✅ Diagnosis: M51.16 (matches covered codes)
-    ✅ Procedure: CPT 62323 (matches covered codes)
-    ✅ All 7 criteria checked:
-       1. Pain 6+ weeks: "pain for past 6 weeks" in notes → MET
-       2. MRI confirmed: "MRI shows herniation" in notes → MET
-       3. Failed PT 4+ weeks: "PT for 3 months" in notes → MET
-       4. Failed NSAIDs: "ibuprofen 600mg" + "minimal relief" → MET
-       5. Activity modification: "pain interferes with activities" → MET
-       6. Pain 5/10+: "pain rated 8/10" in notes → MET
-       7. No emergency: No cauda equina mentioned → MET
-    ✅ No exclusions
-    Result: 7/7 criteria MET
-    → final_decision: "approved", confidence: 0.95
+    Criteria check:
+    1. Clinical findings present (positive SLR, weakness) ✅
+    2. Duration ≥6 weeks: Has 6 months (24 weeks) ✅
+    3. Failed conservative therapy ≥6 weeks with at least TWO modalities:
     
-    Example B - DENIED:
-    ✅ Diagnosis: M51.16 (matches)
-    ✅ Procedure: CPT 62323 (matches)
-    ❌ Criteria results:
-       1. Pain 6+ weeks: Only "2 weeks of pain" → NOT MET
-       2. MRI confirmed: No imaging mentioned → NOT MET
-       3. Failed PT: No PT mentioned → NOT MET
-       4. Failed NSAIDs: Taking ibuprofen → MET
-       5-7: Various → Some MET, some NOT MET
-    Result: Only 2/7 criteria MET clearly
-    → final_decision: "denied", confidence: 0.90
-    (Patient doesn't meet requirements)
+       Note says: "Failed conservative management x 6 months including:
+       - Physical therapy (12 sessions)
+       - NSAIDs (ibuprofen 800mg TID x 3 months)
+       - Muscle relaxants
+       - Activity modification"
     
-    Example C - NEEDS_MORE_INFO:
-    ✅ Diagnosis: M51.16 (matches)
-    ✅ Procedure: CPT 62323 (matches)
-    ? Criteria results:
-       Clinical notes say: "chronic back pain, some treatments tried"
-       Cannot determine: Which treatments? How long? What results?
-       Only 1/7 criteria can be confirmed
-    Result: 1/7 MET, 6/7 completely unknown
-    → final_decision: "needs_more_info", confidence: 0.45
+       Analysis:
+       - "x 6 months including:" means all items tried during 6 months ✅
+       - Physical therapy: 12 sessions during 6-month period ✅
+       - NSAIDs: 3 months = 12 weeks (explicitly stated) ✅
+       - That's TWO modalities both exceeding 6 weeks ✅
+       - Requirement: "at least TWO" → MET ✅
+       - Don't need to verify durations of muscle relaxants/activity mod
     
-    RETURN FORMAT:
+    4. No red flags/exclusions ✅
+    
+    Result: All criteria MET → final_decision = "approved", confidence = 0.90
+    
+    Return JSON:
     {
       "final_decision": "approved" | "denied" | "needs_more_info",
-      "answer": "1-2 sentence summary",
+      "answer": "Brief summary",
       "reasoning": [
         "Step 1: Diagnosis - [result]",
-        "Step 2: Procedure - [result]",  
-        "Step 3: Criteria evaluation - [X/Y met]",
-        "Criterion 1: [met/not met] because...",
-        "Criterion 2: [met/not met] because...",
-        ...
+        "Step 2: Procedure - [result]",
+        "Step 3: Criteria - [X/Y met with specifics]",
         "Step 4: Exclusions - [result]",
-        "Step 5: Final decision - [logic applied]"
+        "Step 5: Decision logic"
       ],
       "confidence": 0.0-1.0,
       "citations": [{"claim": "...", "source": "..."}]
     }
-    
-    REMEMBER: If you found that ALL criteria are MET, you CANNOT say "needs_more_info". 
-    You must say "approved". There is no logical reason to need more info if everything is already confirmed!
     """
         
         result = await llm_service.query_with_context(question, combined_context)

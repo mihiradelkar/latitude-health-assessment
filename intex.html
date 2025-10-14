@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synthetic Clinical Notes for Prior Authorization</title>
+    <style>
+      @media print {
+        .page-break {
+          page-break-after: always;
+        }
+        body {
+          margin: 0;
+          padding: 20px;
+        }
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        line-height: 1.4;
+        color: #333;
+        max-width: 8.5in;
+        margin: 0 auto;
+        padding: 0.5in;
+        background: white;
+      }
+
+      .clinical-note {
+        margin-bottom: 2em;
+        border: 1px solid #ddd;
+        padding: 30px;
+        background: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .header {
+        border-bottom: 2px solid #2c3e50;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+
+      .facility-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 5px;
+      }
+
+      .document-title {
+        font-size: 16px;
+        color: #34495e;
+        margin-bottom: 15px;
+      }
+
+      .patient-info {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 13px;
+      }
+
+      .patient-info div {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .patient-info label {
+        font-weight: bold;
+        color: #666;
+        font-size: 11px;
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      .section-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #2c3e50;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 5px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+
+      .section-content {
+        font-size: 13px;
+        line-height: 1.6;
+        color: #444;
+        padding-left: 10px;
+      }
+
+      .medications-list,
+      .test-results {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 3px;
+        margin: 10px 0;
+      }
+
+      .medications-list ul,
+      .test-results ul {
+        margin: 5px 0;
+        padding-left: 20px;
+      }
+
+      .medications-list li,
+      .test-results li {
+        margin: 3px 0;
+        font-size: 12px;
+      }
+
+      .prior-auth-request {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+        border-radius: 5px;
+        padding: 15px;
+        margin-top: 20px;
+      }
+
+      .prior-auth-request .title {
+        font-weight: bold;
+        color: #856404;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      .prior-auth-request ul {
+        margin: 5px 0;
+        padding-left: 20px;
+      }
+
+      .prior-auth-request li {
+        margin: 5px 0;
+        font-size: 13px;
+      }
+
+      .signature-block {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+      }
+
+      .signature-line {
+        display: inline-block;
+        width: 250px;
+        border-bottom: 1px solid #333;
+        margin-right: 30px;
+      }
+
+      .signature-label {
+        font-size: 11px;
+        color: #666;
+        margin-top: 3px;
+      }
+
+      .footer {
+        margin-top: 20px;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+        font-size: 10px;
+        color: #999;
+        text-align: center;
+      }
+
+      h1 {
+        color: #2c3e50;
+        font-size: 24px;
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 5px;
+      }
+
+      .print-instructions {
+        background: #e3f2fd;
+        border: 1px solid #2196f3;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Synthetic Clinical Notes for Prior Authorization Testing</h1>
+
+    <div class="print-instructions">
+      <strong>📄 To Save as PDF:</strong> Press Ctrl+P (or Cmd+P on Mac) and
+      select "Save as PDF" as your printer destination.
+    </div>
+
+    <!-- Patient 1: Advanced Imaging -->
+    <div class="clinical-note">
+      <div class="header">
+        <div class="facility-name">RIVERSIDE MEDICAL CENTER</div>
+        <div class="document-title">
+          CLINICAL DOCUMENTATION - PRIOR AUTHORIZATION REQUEST
+        </div>
+      </div>
+
+      <div class="patient-info">
+        <div>
+          <label>Patient Name</label>
+          <span>Sarah Johnson</span>
+        </div>
+        <div>
+          <label>Date of Birth</label>
+          <span>03/15/1978</span>
+        </div>
+        <div>
+          <label>MRN</label>
+          <span>SYN-2024-001</span>
+        </div>
+        <div>
+          <label>Provider</label>
+          <span>Dr. Michael Chen, MD</span>
+        </div>
+        <div>
+          <label>Date of Service</label>
+          <span>01/10/2025</span>
+        </div>
+        <div>
+          <label>Facility</label>
+          <span>Riverside Medical Center</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Chief Complaint</div>
+        <div class="section-content">
+          Persistent lower back pain with radiculopathy, 6 months duration
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">History of Present Illness</div>
+        <div class="section-content">
+          45-year-old female presents with chronic lower back pain radiating to
+          left lower extremity. Pain began 6 months ago after lifting heavy
+          boxes. Initial conservative treatment with NSAIDs and physical therapy
+          provided minimal relief. Pain severity 7/10, worse with prolonged
+          sitting and bending. Numbness and tingling in L5 distribution.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Physical Examination</div>
+        <div class="section-content">
+          <ul>
+            <li>Straight leg raise positive at 45 degrees on left</li>
+            <li>Decreased sensation L5 dermatome left foot</li>
+            <li>Muscle strength 4/5 left ankle dorsiflexion</li>
+            <li>Deep tendon reflexes: diminished left Achilles reflex</li>
+            <li>Positive crossed straight leg raise</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Assessment and Plan</div>
+        <div class="section-content">
+          Lumbar radiculopathy, likely L5-S1 disc herniation. Failed
+          conservative management x 6 months including:
+          <ul>
+            <li>Physical therapy (12 sessions completed)</li>
+            <li>NSAIDs (ibuprofen 800mg TID x 3 months)</li>
+            <li>Muscle relaxants (cyclobenzaprine 10mg QHS)</li>
+            <li>Activity modification</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="prior-auth-request">
+        <div class="title">PRIOR AUTHORIZATION REQUEST</div>
+        <ul>
+          <li><strong>Procedure:</strong> MRI Lumbar Spine without contrast</li>
+          <li><strong>CPT Code:</strong> 72148</li>
+          <li>
+            <strong>ICD-10 Code:</strong> M54.16 (Radiculopathy, lumbar region)
+          </li>
+        </ul>
+      </div>
+
+      <div class="signature-block">
+        <div>
+          <span class="signature-line"></span>
+          <span class="signature-line"></span>
+        </div>
+        <div>
+          <span class="signature-label">Provider Signature</span>
+          <span class="signature-label" style="margin-left: 180px">Date</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        This is a synthetic clinical note created for testing purposes only. No
+        real patient information is contained in this document.
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Patient 2: Specialty Medication -->
+    <div class="clinical-note">
+      <div class="header">
+        <div class="facility-name">METRO SPECIALTY CLINIC</div>
+        <div class="document-title">
+          CLINICAL DOCUMENTATION - PRIOR AUTHORIZATION REQUEST
+        </div>
+      </div>
+
+      <div class="patient-info">
+        <div>
+          <label>Patient Name</label>
+          <span>James Rodriguez</span>
+        </div>
+        <div>
+          <label>Date of Birth</label>
+          <span>07/22/1992</span>
+        </div>
+        <div>
+          <label>MRN</label>
+          <span>SYN-2024-002</span>
+        </div>
+        <div>
+          <label>Provider</label>
+          <span>Dr. Lisa Thompson, MD</span>
+        </div>
+        <div>
+          <label>Date of Service</label>
+          <span>01/11/2025</span>
+        </div>
+        <div>
+          <label>Specialty</label>
+          <span>Rheumatology</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Chief Complaint</div>
+        <div class="section-content">
+          Moderate to severe plaque psoriasis, inadequate response to topical
+          treatments
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">History of Present Illness</div>
+        <div class="section-content">
+          32-year-old male with 5-year history of plaque psoriasis. Currently
+          affects 15% body surface area including scalp, elbows, knees, and
+          trunk. Significant impact on quality of life, DLQI score 18.
+          <div class="medications-list">
+            <strong>Previous treatments include:</strong>
+            <ul>
+              <li>
+                Topical corticosteroids (clobetasol propionate 0.05%) - partial
+                response
+              </li>
+              <li>Calcipotriene 0.005% cream - minimal improvement</li>
+              <li>
+                Phototherapy (narrow-band UVB) - 24 sessions, temporary
+                improvement
+              </li>
+              <li>
+                Methotrexate 15mg weekly x 4 months - discontinued due to
+                elevated LFTs
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Physical Examination</div>
+        <div class="section-content">
+          <ul>
+            <li>
+              Multiple erythematous, well-demarcated plaques with silvery scales
+            </li>
+            <li>Scalp involvement 40%</li>
+            <li>PASI score: 14.2</li>
+            <li>No nail involvement</li>
+            <li>No joint pain or swelling</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Laboratory Results</div>
+        <div class="section-content">
+          <div class="test-results">
+            <ul>
+              <li>CBC: Normal</li>
+              <li>CMP: Normal</li>
+              <li>Hepatitis panel: Negative</li>
+              <li>TB screening (QuantiFERON Gold): Negative</li>
+              <li>HIV: Negative</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Assessment and Plan</div>
+        <div class="section-content">
+          Moderate to severe plaque psoriasis, failed conventional systemic
+          therapy.
+        </div>
+      </div>
+
+      <div class="prior-auth-request">
+        <div class="title">PRIOR AUTHORIZATION REQUEST</div>
+        <ul>
+          <li><strong>Medication:</strong> Humira (adalimumab)</li>
+          <li>
+            <strong>Dosing:</strong> 80mg SC week 0, 40mg week 1, then 40mg
+            every other week
+          </li>
+          <li><strong>NDC:</strong> 00074-8238-01</li>
+          <li><strong>ICD-10 Code:</strong> L40.0 (Psoriasis vulgaris)</li>
+          <li>
+            <strong>Duration:</strong> 6 months initial approval requested
+          </li>
+        </ul>
+      </div>
+
+      <div class="signature-block">
+        <div>
+          <span class="signature-line"></span>
+          <span class="signature-line"></span>
+        </div>
+        <div>
+          <span class="signature-label">Provider Signature</span>
+          <span class="signature-label" style="margin-left: 180px">Date</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        This is a synthetic clinical note created for testing purposes only. No
+        real patient information is contained in this document.
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Patient 3: Surgical Prior Authorization -->
+    <div class="clinical-note">
+      <div class="header">
+        <div class="facility-name">ST. MARY'S HOSPITAL</div>
+        <div class="document-title">
+          CLINICAL DOCUMENTATION - PRIOR AUTHORIZATION REQUEST
+        </div>
+      </div>
+
+      <div class="patient-info">
+        <div>
+          <label>Patient Name</label>
+          <span>Margaret Wilson</span>
+        </div>
+        <div>
+          <label>Date of Birth</label>
+          <span>11/30/1955</span>
+        </div>
+        <div>
+          <label>MRN</label>
+          <span>SYN-2024-003</span>
+        </div>
+        <div>
+          <label>Provider</label>
+          <span>Dr. Robert Kim, MD</span>
+        </div>
+        <div>
+          <label>Date of Service</label>
+          <span>01/12/2025</span>
+        </div>
+        <div>
+          <label>Specialty</label>
+          <span>Orthopedic Surgery</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Chief Complaint</div>
+        <div class="section-content">
+          Severe right knee osteoarthritis, failed conservative management
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">History of Present Illness</div>
+        <div class="section-content">
+          69-year-old female with progressive right knee pain x 8 years. Pain
+          now constant, 8/10 severity, limiting ambulation to < 1 block. Unable
+          to climb stairs. Night pain disrupting sleep.
+          <div class="medications-list">
+            <strong>Conservative treatments exhausted:</strong>
+            <ul>
+              <li>Physical therapy: 3 courses (36 total sessions)</li>
+              <li>
+                Intra-articular corticosteroid injections: 4 injections over 2
+                years, last 3 months ago
+              </li>
+              <li>Hyaluronic acid injections: Series of 3, minimal benefit</li>
+              <li>Weight loss: 25 lbs over past year (BMI now 28)</li>
+              <li>NSAIDs, acetaminophen: ongoing with limited relief</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Physical Examination</div>
+        <div class="section-content">
+          <ul>
+            <li>Right knee: Moderate effusion, crepitus with ROM</li>
+            <li>ROM: Flexion limited to 90 degrees (left 130 degrees)</li>
+            <li>Varus deformity 10 degrees</li>
+            <li>Tenderness medial and lateral joint lines</li>
+            <li>Stable ligamentous exam</li>
+            <li>Neurovascular intact distally</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Imaging</div>
+        <div class="section-content">
+          <div class="test-results">
+            <strong>X-ray right knee (12/20/2024):</strong>
+            <ul>
+              <li>Severe tricompartmental osteoarthritis</li>
+              <li>Complete loss of medial joint space</li>
+              <li>Large osteophytes</li>
+              <li>Subchondral sclerosis and cysts</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Assessment and Plan</div>
+        <div class="section-content">
+          Severe primary osteoarthritis right knee, Kellgren-Lawrence Grade 4.
+          Failed comprehensive conservative management.
+        </div>
+      </div>
+
+      <div class="prior-auth-request">
+        <div class="title">PRIOR AUTHORIZATION REQUEST</div>
+        <ul>
+          <li><strong>Procedure:</strong> Total knee arthroplasty, right</li>
+          <li><strong>CPT Code:</strong> 27447</li>
+          <li>
+            <strong>ICD-10 Code:</strong> M17.11 (Unilateral primary
+            osteoarthritis, right knee)
+          </li>
+          <li><strong>Planned admission:</strong> 1-2 days</li>
+          <li>
+            <strong>Post-op:</strong> Skilled nursing facility x 7-14 days for
+            rehabilitation
+          </li>
+        </ul>
+      </div>
+
+      <div class="signature-block">
+        <div>
+          <span class="signature-line"></span>
+          <span class="signature-line"></span>
+        </div>
+        <div>
+          <span class="signature-label">Provider Signature</span>
+          <span class="signature-label" style="margin-left: 180px">Date</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        This is a synthetic clinical note created for testing purposes only. No
+        real patient information is contained in this document.
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Patient 4: DME Prior Authorization -->
+    <div class="clinical-note">
+      <div class="header">
+        <div class="facility-name">BREATHING CENTER ASSOCIATES</div>
+        <div class="document-title">
+          CLINICAL DOCUMENTATION - PRIOR AUTHORIZATION REQUEST
+        </div>
+      </div>
+
+      <div class="patient-info">
+        <div>
+          <label>Patient Name</label>
+          <span>Robert Chen</span>
+        </div>
+        <div>
+          <label>Date of Birth</label>
+          <span>05/18/1948</span>
+        </div>
+        <div>
+          <label>MRN</label>
+          <span>SYN-2024-004</span>
+        </div>
+        <div>
+          <label>Provider</label>
+          <span>Dr. Emily Foster, MD</span>
+        </div>
+        <div>
+          <label>Date of Service</label>
+          <span>01/13/2025</span>
+        </div>
+        <div>
+          <label>Specialty</label>
+          <span>Pulmonology</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Chief Complaint</div>
+        <div class="section-content">
+          Severe COPD with chronic respiratory failure
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">History of Present Illness</div>
+        <div class="section-content">
+          76-year-old male with GOLD Stage IV COPD, chronic hypoxemic
+          respiratory failure. Former smoker (60 pack-years, quit 5 years ago).
+          Multiple hospitalizations past year for COPD exacerbations (3
+          admissions). Currently on maximal medical therapy. Experiencing
+          significant dyspnea with minimal exertion, unable to walk to bathroom
+          without oxygen.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Current Medications</div>
+        <div class="section-content">
+          <div class="medications-list">
+            <ul>
+              <li>Symbicort 160/4.5 mcg 2 puffs BID</li>
+              <li>Spiriva 18 mcg daily</li>
+              <li>Albuterol nebulizer QID and PRN</li>
+              <li>Prednisone 10mg daily</li>
+              <li>Furosemide 40mg daily</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Recent Testing</div>
+        <div class="section-content">
+          <div class="test-results">
+            <strong>Pulmonary Function Tests (12/15/2024):</strong>
+            <ul>
+              <li>FEV1: 28% predicted</li>
+              <li>FVC: 45% predicted</li>
+              <li>FEV1/FVC: 42%</li>
+            </ul>
+          </div>
+          <div class="test-results">
+            <strong>Arterial Blood Gas (room air, 01/05/2025):</strong>
+            <ul>
+              <li>pH: 7.38</li>
+              <li>pCO2: 48 mmHg</li>
+              <li>pO2: 52 mmHg</li>
+              <li>SaO2: 84%</li>
+            </ul>
+          </div>
+          <div class="test-results">
+            <strong>6-Minute Walk Test (01/08/2025):</strong>
+            <ul>
+              <li>Distance: 125 meters</li>
+              <li>Lowest SpO2: 78% on room air</li>
+              <li>SpO2 maintained > 90% with 4L O2 via nasal cannula</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Assessment and Plan</div>
+        <div class="section-content">
+          Severe COPD with chronic hypoxemic respiratory failure meeting
+          Medicare criteria for home oxygen therapy.
+        </div>
+      </div>
+
+      <div class="prior-auth-request">
+        <div class="title">PRIOR AUTHORIZATION REQUEST</div>
+        <ul>
+          <li>
+            <strong>Equipment:</strong> Stationary oxygen concentrator, Portable
+            oxygen system
+          </li>
+          <li>
+            <strong>HCPCS Codes:</strong> E1390 (concentrator), E0433 (portable)
+          </li>
+          <li>
+            <strong>ICD-10 Code:</strong> J44.0 (COPD with acute lower
+            respiratory infection)
+          </li>
+          <li>
+            <strong>Prescription:</strong> O2 at 2-4 LPM continuous, titrate to
+            maintain SpO2 > 90%
+          </li>
+        </ul>
+      </div>
+
+      <div class="signature-block">
+        <div>
+          <span class="signature-line"></span>
+          <span class="signature-line"></span>
+        </div>
+        <div>
+          <span class="signature-label">Provider Signature</span>
+          <span class="signature-label" style="margin-left: 180px">Date</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        This is a synthetic clinical note created for testing purposes only. No
+        real patient information is contained in this document.
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Patient 5: Mental Health Services -->
+    <div class="clinical-note">
+      <div class="header">
+        <div class="facility-name">MINDWELL PSYCHIATRIC SERVICES</div>
+        <div class="document-title">
+          CLINICAL DOCUMENTATION - PRIOR AUTHORIZATION REQUEST
+        </div>
+      </div>
+
+      <div class="patient-info">
+        <div>
+          <label>Patient Name</label>
+          <span>Ashley Martinez</span>
+        </div>
+        <div>
+          <label>Date of Birth</label>
+          <span>09/10/2003</span>
+        </div>
+        <div>
+          <label>MRN</label>
+          <span>SYN-2024-005</span>
+        </div>
+        <div>
+          <label>Provider</label>
+          <span>Dr. Jennifer White, MD</span>
+        </div>
+        <div>
+          <label>Date of Service</label>
+          <span>01/14/2025</span>
+        </div>
+        <div>
+          <label>Specialty</label>
+          <span>Psychiatry</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Chief Complaint</div>
+        <div class="section-content">
+          Treatment-resistant major depression with suicidal ideation
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">History of Present Illness</div>
+        <div class="section-content">
+          21-year-old female college student with 3-year history of major
+          depressive disorder. Recent deterioration despite medication
+          compliance. Experiencing persistent depressed mood, anhedonia,
+          insomnia, poor concentration affecting academic performance. Passive
+          suicidal ideation present, denies plan or intent. No prior attempts.
+          <div class="medications-list">
+            <strong>Failed multiple medication trials:</strong>
+            <ul>
+              <li>Sertraline up to 200mg daily x 6 months</li>
+              <li>Escitalopram up to 20mg daily x 4 months</li>
+              <li>Venlafaxine XR up to 225mg daily x 5 months (current)</li>
+              <li>Augmentation with bupropion 300mg daily x 3 months</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Mental Status Examination</div>
+        <div class="section-content">
+          <ul>
+            <li>Appearance: Disheveled, poor eye contact</li>
+            <li>Mood: "Hopeless"</li>
+            <li>Affect: Restricted, tearful at times</li>
+            <li>Thought process: Linear but slowed</li>
+            <li>Thought content: Ruminations about failure, passive SI</li>
+            <li>Cognition: Alert and oriented x3</li>
+            <li>Insight/Judgment: Fair</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Risk Assessment</div>
+        <div class="section-content">
+          <div class="test-results">
+            <ul>
+              <li>PHQ-9 Score: 22 (severe depression)</li>
+              <li>
+                Columbia Suicide Severity Rating Scale: Ideation present, no
+                plan
+              </li>
+              <li>
+                Protective factors: Family support, no access to firearms,
+                engaged in treatment
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Assessment and Plan</div>
+        <div class="section-content">
+          Major depressive disorder, severe, treatment-resistant. Recommend
+          intensive outpatient program with psychotherapy focus.
+        </div>
+      </div>
+
+      <div class="prior-auth-request">
+        <div class="title">PRIOR AUTHORIZATION REQUEST</div>
+        <ul>
+          <li><strong>Service:</strong> Intensive Outpatient Program (IOP)</li>
+          <li><strong>CPT Code:</strong> 90853 (group therapy)</li>
+          <li>
+            <strong>Frequency:</strong> 3 hours/day, 3 days/week x 8 weeks
+          </li>
+          <li>
+            <strong>ICD-10 Code:</strong> F33.2 (Major depressive disorder,
+            recurrent, severe without psychotic features)
+          </li>
+        </ul>
+      </div>
+
+      <div class="signature-block">
+        <div>
+          <span class="signature-line"></span>
+          <span class="signature-line"></span>
+        </div>
+        <div>
+          <span class="signature-label">Provider Signature</span>
+          <span class="signature-label" style="margin-left: 180px">Date</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        This is a synthetic clinical note created for testing purposes only. No
+        real patient information is contained in this document.
+      </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- Patient 6: Cardiac Procedure -->
+    <div class="clinical-note">
+      <div class="header">
+        <div class="facility-name">HEART & VASCULAR INSTITUTE</div>
+        <div class="document-title">
+          CLINICAL DOCUMENTATION - PRIOR AUTHORIZATION REQUEST
+        </div>
+      </div>
+
+      <div class="patient-info">
+        <div>
+          <label>Patient Name</label>
+          <span>William Thompson</span>
+        </div>
+        <div>
+          <label>Date of Birth</label>
+          <span>02/28/1960</span>
+        </div>
+        <div>
+          <label>MRN</label>
+          <span>SYN-2024-006</span>
+        </div>
+        <div>
+          <label>Provider</label>
+          <span>Dr. Mark Anderson, MD</span>
+        </div>
+        <div>
+          <label>Date of Service</label>
+          <span>01/15/2025</span>
+        </div>
+        <div>
+          <label>Specialty</label>
+          <span>Cardiology</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Chief Complaint</div>
+        <div class="section-content">
+          Unstable angina with high-risk features
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">History of Present Illness</div>
+        <div class="section-content">
+          64-year-old male with CAD risk factors (HTN, HLD, DM2, former smoker)
+          presenting with crescendo angina past 2 weeks. Chest pressure
+          occurring with minimal exertion and at rest, relieved by sublingual
+          nitroglycerin. Episodes increasing in frequency and duration. No prior
+          cardiac catheterization.
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Cardiac Risk Factors</div>
+        <div class="section-content">
+          <ul>
+            <li>Hypertension x 10 years</li>
+            <li>Hyperlipidemia (LDL 145 on statin)</li>
+            <li>Type 2 diabetes (A1c 7.8%)</li>
+            <li>Former smoker (quit 2 years ago, 30 pack-years)</li>
+            <li>Family history: Father MI at age 58</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Diagnostic Testing</div>
+        <div class="section-content">
+          <div class="test-results">
+            <strong>EKG (01/14/2025):</strong>
+            <ul>
+              <li>Dynamic T-wave inversions in V3-V6 during chest pain</li>
+              <li>Resolution with nitroglycerin</li>
+            </ul>
+          </div>
+          <div class="test-results">
+            <strong>Troponin I:</strong>
+            <ul>
+              <li>0.08 ng/mL (elevated, normal <0.04)</li>
+              <li>Repeat 0.12 ng/mL</li>
+            </ul>
+          </div>
+          <div class="test-results">
+            <strong>Stress Echo (01/10/2025):</strong>
+            <ul>
+              <li>Stopped at 5 minutes due to chest pain</li>
+              <li>Inferior and lateral wall hypokinesis with stress</li>
+              <li>Reversible at rest</li>
+              <li>EF 45%</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Assessment and Plan</div>
+        <div class="section-content">
+          Unstable angina/NSTEMI with high-risk features. Recommend urgent
+          cardiac catheterization with possible percutaneous coronary
+          intervention.
+        </div>
+      </div>
+
+      <div class="prior-auth-request">
+        <div class="title">PRIOR AUTHORIZATION REQUEST</div>
+        <ul>
+          <li>
+            <strong>Procedures:</strong> Left heart catheterization, Possible
+            PCI with drug-eluting stent placement
+          </li>
+          <li><strong>CPT Codes:</strong> 93458, 92928</li>
+          <li><strong>ICD-10 Code:</strong> I20.0 (Unstable angina)</li>
+          <li><strong>Urgency:</strong> Urgent/expedited review requested</li>
+        </ul>
+      </div>
+
+      <div class="signature-block">
+        <div>
+          <span class="signature-line"></span>
+          <span class="signature-line"></span>
+        </div>
+        <div>
+          <span class="signature-label">Provider Signature</span>
+          <span class="signature-label" style="margin-left: 180px">Date</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        This is a synthetic clinical note created for testing purposes only. No
+        real patient information is contained in this document.
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "final_decision": "needs_more_info",
+  "answer": "The lumbar epidural steroid injection request cannot be approved at this time due to insufficient documentation of conservative treatment duration. While the patient has the appropriate diagnosis (M51.16 - Lumbar radiculopathy secondary to L4-L5 disc herniation) confirmed by recent MRI, and the procedure (CPT 62323) is covered, the documentation shows only 6 weeks of radicular pain symptoms but references 3 months of physical therapy for chronic back pain. The policy requires failed conservative treatment for at least 6 weeks specifically for radicular pain (sciatica radiating below the knee). Additionally, there is no documented pain scale score, which is required by policy (pain level 5/10 or greater). The clinical note mentions pain rated 8/10, satisfying this criterion, but formal documentation of physical therapy specifically for the radicular symptoms and confirmation of the 6-week symptom duration with conservative treatment attempts during that period is needed.",
+  "reasoning": [
+    "Step 1: Diagnosis - \u2705 Patient has M51.16 (Lumbar radiculopathy secondary to L4-L5 disc herniation), which is in the covered ICD-10 codes list",
+    "Step 2: Procedure - \u2705 CPT 62323 (Lumbar epidural steroid injection) is in the covered procedures list",
+    "Step 3: Criteria Evaluation - 4/7 criteria clearly met, 3 require clarification: (1) \u2705 Radicular pain radiating below knee documented for 6 weeks with left leg radiation and left foot numbness; (2) \u2705 MRI confirmed L4-L5 disc herniation within 6 months (01/10/2025); (3) \u26a0\ufe0f Physical therapy documented for 3 months but for 'chronic lower back pain for past 18 months' - unclear if 4+ weeks of PT occurred during the 6-week radicular pain period; (4) \u2705 NSAIDs trial documented (Ibuprofen 600mg TID PRN); (5) \u26a0\ufe0f Activity modification not explicitly documented; (6) \u2705 Pain level 8/10 exceeds the 5/10 requirement; (7) \u2705 No neurological emergency present",
+    "Step 4: Exclusions - \u2705 No exclusion criteria present (no active infection, no documented coagulopathy, no allergy to anesthetics/corticosteroids, no recent injections)",
+    "Step 5: Decision Logic - The timeline discrepancy is critical: radicular pain is documented for only 6 weeks, but conservative treatment (PT) is documented for chronic back pain over 18 months. Policy specifically requires conservative treatment for radicular pain/sciatica for at least 6 weeks. Need clarification that conservative measures were attempted during the 6-week radicular symptom period, and formal documentation of activity modification attempts.",
+    "Required Documentation Gap: Clinical notes should clarify that physical therapy and conservative measures were specifically attempted for the radicular symptoms during the 6-week period, not just for the chronic degenerative back pain"
+  ],
+  "confidence": 0.65,
+  "citations": [
+    {
+      "claim": "Patient has M51.16 Lumbar radiculopathy secondary to L4-L5 disc herniation",
+      "source": "patient_data.conditions[3] and coverage_policy.covered_icd10_codes[0]"
+    },
+    {
+      "claim": "MRI confirmed moderate L4-L5 disc herniation with nerve root impingement dated 01/10/2025",
+      "source": "patient_data.observations[1] and clinical_context HPI section"
+    },
+    {
+      "claim": "Radicular pain down left leg for past 6 weeks",
+      "source": "clinical_context - History of Present Illness: 'new onset of radiating pain down left leg for past 6 weeks'"
+    },
+    {
+      "claim": "Physical therapy for 3 months documented but for chronic back pain, not specifically for radicular symptoms",
+      "source": "clinical_context - History of Present Illness: 'chronic lower back pain for past 18 months' and 'physical therapy for 3 months'"
+    },
+    {
+      "claim": "Pain level 8/10 documented",
+      "source": "clinical_context - History of Present Illness: 'Pain is sharp, rated 8/10'"
+    },
+    {
+      "claim": "Policy requires radicular pain for at least 6 weeks and failed conservative treatment for minimum 4 weeks",
+      "source": "coverage_policy.coverage_criteria[0] and coverage_policy.coverage_criteria[2]"
+    }
+  ]
+}

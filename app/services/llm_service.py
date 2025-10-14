@@ -107,19 +107,19 @@ Rules:
             response_text = message.content[0].text
             
             # Debug: print what we got
-            print("\n" + "="*50)
-            print("RAW LLM RESPONSE:")
-            print("="*50)
+            # print("\n" + "="*50)
+            # print("RAW LLM RESPONSE:")
+            # print("="*50)
             # print(response_text[:500])  # Print first 500 chars
-            print("="*50 + "\n")
+            # print("="*50 + "\n")
             
             # Clean and extract JSON
             json_text = self._extract_json_from_response(response_text)
             
-            print("EXTRACTED JSON:")
-            print("="*50)
+            # print("EXTRACTED JSON:")
+            # print("="*50)
             # print(json_text[:500])
-            print("="*50 + "\n")
+            # print("="*50 + "\n")
             
             # Parse JSON
             structured_data = json.loads(json_text)
