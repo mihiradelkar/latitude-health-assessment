@@ -1,5 +1,6 @@
+# app/models/clinical_note.py
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from datetime import datetime
 
 class Medication(BaseModel):
@@ -7,6 +8,7 @@ class Medication(BaseModel):
     dosage: Optional[str] = None
     frequency: Optional[str] = None
     route: Optional[str] = None
+    duration: Optional[str] = None  # Added duration field
 
 class Allergy(BaseModel):
     substance: str
@@ -16,7 +18,7 @@ class Allergy(BaseModel):
 class LabResult(BaseModel):
     test_name: str
     value: str
-    unit: Optional[str] = None  # Changed: was str, now Optional[str]
+    unit: Optional[str] = None
     reference_range: Optional[str] = None
     date: Optional[str] = None
 
@@ -30,8 +32,24 @@ class ProcedureCode(BaseModel):
     system: str = "CPT"
     display: str
 
+class ConservativeTreatment(BaseModel):
+    """Model for conservative treatment details"""
+    modality: str
+    details: Optional[str] = None
+    duration: Optional[str] = None
+    duration_weeks: Optional[int] = None
+    sessions: Optional[int] = None
+    outcome: Optional[str] = None
+
+class ClinicalTimeline(BaseModel):
+    """Model for clinical timeline information"""
+    symptom_onset: Optional[str] = None
+    conservative_treatment_start: Optional[str] = None
+    conservative_treatment_duration: Optional[str] = None
+    total_duration_weeks: Optional[int] = None
+
 class StructuredClinicalNote(BaseModel):
-    """Structured representation of a clinical note"""
+    """Enhanced structured representation of a clinical note"""
     
     # Raw note
     raw_note: str
@@ -54,9 +72,15 @@ class StructuredClinicalNote(BaseModel):
     diagnoses: Optional[List[DiagnosisCode]] = None
     procedures: Optional[List[ProcedureCode]] = None
     
+    # NEW FIELDS for enhanced extraction
+    symptom_duration: Optional[str] = None
+    conservative_treatments: Optional[List[ConservativeTreatment]] = None
+    clinical_timeline: Optional[ClinicalTimeline] = None
+    confidence_scores: Optional[Dict[str, float]] = None
+    
     # Metadata
     processed_at: datetime = Field(default_factory=datetime.now)
-    processing_model: str = "claude-sonnet-4-5-20250929"
+    processing_model: str = "claude-3-sonnet-20241022"
 
 class ClinicalNoteRequest(BaseModel):
     """Request to process a clinical note"""
@@ -70,3 +94,4 @@ class ClinicalNoteResponse(BaseModel):
     structured_data: StructuredClinicalNote
     fhir_resources: Optional[dict] = None
     processing_time_ms: float
+    extraction_confidence: Optional[Dict[str, float]] = None  # Added for confidence tracking
