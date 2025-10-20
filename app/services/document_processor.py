@@ -1,3 +1,4 @@
+# app\services\document_processor.py
 import os
 import tempfile
 from typing import Tuple, Optional
@@ -8,9 +9,7 @@ import pdfplumber
 from pdf2image import convert_from_path
 from fastapi import UploadFile
 
-# Configure tesseract path (Windows users may need to set this)
 # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
-
 
 class DocumentProcessor:
     """

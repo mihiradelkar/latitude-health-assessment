@@ -1,3 +1,4 @@
+# app\services\mcp_manager.py
 from pydantic_settings import BaseSettings
 from functools import lru_cache
 
