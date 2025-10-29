@@ -12,7 +12,8 @@ import json
 
 router = APIRouter()
 
-# In-memory storage for demo (replace with DB later)
+# In-memory storage for demo 
+# TODO: replace with DB in production
 notes_storage: Dict[str, dict] = {}
 
 
@@ -41,7 +42,7 @@ async def process_clinical_note(request: ClinicalNoteRequest):
         fhir_bundle = fhir_mapper.map_to_fhir_bundle(structured_data)
         
         # Calculate processing time
-        processing_time = (time.time() - start_time) * 1000  # ms
+        processing_time = (time.time() - start_time) * 1000
         
         # Store in memory
         notes_storage[note_id] = {

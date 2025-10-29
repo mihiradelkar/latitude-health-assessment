@@ -8,7 +8,6 @@ from fastapi import FastAPI, HTTPException, WebSocket
 from pydantic import BaseModel
 import logging
 
-# Import your existing services (no changes needed to them)
 from app.services.llm_service import llm_service
 from app.services.fhir_mapper import fhir_mapper
 from app.services.document_processor import document_processor
@@ -16,9 +15,7 @@ from app.services.decision_engine import decision_engine
 from app.services.mcp_manager import mcp_manager
 from app.api.clinical_notes import notes_storage
 
-# ============================================
 # MCP Protocol Data Models
-# ============================================
 
 @dataclass
 class MCPTool:
@@ -49,9 +46,7 @@ class MCPResponse(BaseModel):
     processing_time_ms: Optional[float] = None
     session_id: Optional[str] = None
 
-# ============================================
 # MCP Server Implementation
-# ============================================
 
 class MCPServer:
     """
@@ -184,9 +179,7 @@ class MCPServer:
         self.tools[tool.name] = tool
         self.logger.info(f"Registered MCP tool: {tool.name}")
     
-    # ============================================
     # Tool Handlers (Wrapping Your Existing Services)
-    # ============================================
     
     async def _handle_clinical_extraction(self, params: Dict) -> Dict:
         """Wrap your existing clinical note extraction"""
@@ -358,9 +351,7 @@ class MCPServer:
                 "data": None
             }
     
-    # ============================================
     # Core MCP Protocol Methods
-    # ============================================
     
     async def execute(self, request: MCPRequest) -> MCPResponse:
         """
@@ -436,9 +427,7 @@ class MCPServer:
         """Get session data"""
         return self.sessions.get(session_id)
 
-# ============================================
 # FastAPI Integration
-# ============================================
 
 # Initialize MCP Server
 mcp_server = MCPServer()
@@ -516,9 +505,7 @@ def add_mcp_routes(app: FastAPI):
             })
             await websocket.close()
 
-# ============================================
 # Testing the MCP Wrapper
-# ============================================
 
 async def test_mcp_wrapper():
     """

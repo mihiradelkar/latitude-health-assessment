@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Latitude Health Prior Auth API",
     description="prior authorization system using FHIR and MCP",
-    version="2.0.0",  # Bumped version: MCP support
+    version="2.0.0",  # Bumped: MCP support
     lifespan=lifespan
 )
 
