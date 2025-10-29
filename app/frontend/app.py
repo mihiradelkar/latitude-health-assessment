@@ -16,12 +16,12 @@ with st.sidebar:
     st.header("System Info")
     st.info("""
     This system demonstrates:
-    - 📝 Clinical note structuring with LLM
-    - 📄 PDF/Image upload with OCR
-    - 🔗 FHIR resource mapping
-    - 🧠 Model Context Protocol (MCP)
-    - ⚕️ Prior authorization evaluation
-    - 📊 A2A workflow simulation
+    - Clinical note structuring with LLM
+    - PDF/Image upload with OCR
+    - FHIR resource mapping
+    - Model Context Protocol (MCP)
+    - Prior authorization evaluation
+    - A2A workflow simulation
     """)
     
     # Health check
@@ -36,11 +36,11 @@ with st.sidebar:
 
 # Main tabs - Added Upload tab
 tab1, tab1_5, tab2, tab3, tab4 = st.tabs([
-    "📝 Process Clinical Note",
-    "📄 Upload Document (OCR)",
-    "📋 Extract Guidelines", 
-    "⚖️ Evaluate Prior Auth",
-    "📊 View Results"
+    "Process Clinical Note",
+    "Upload Document (OCR)",
+    "Extract Guidelines", 
+    "Evaluate Prior Auth",
+    "View Results"
 ])
 
 # Tab 1: Process Clinical Note (existing code)

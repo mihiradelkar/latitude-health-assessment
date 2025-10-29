@@ -17,7 +17,7 @@ class Allergy(BaseModel):
 class LabResult(BaseModel):
     test_name: str
     value: str
-    unit: Optional[str] = None  # Changed: was str, now Optional[str]
+    unit: Optional[str] = None 
     reference_range: Optional[str] = None
     date: Optional[str] = None
 
